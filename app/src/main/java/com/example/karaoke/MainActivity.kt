@@ -28,6 +28,7 @@ import okhttp3.sse.EventSourceListener
 import okhttp3.sse.EventSources
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity() {
                     serverIp = serverIp.substring(0, serverIp.length - 1)
                 }
                 getSharedPreferences("KTV_PREFS", Context.MODE_PRIVATE)
-                    .edit().putString("server", serverIp).apply()
+                    .edit { putString("server", serverIp) }
 
                 initPlayers()
                 startSSE()
@@ -424,12 +425,16 @@ class MainActivity : AppCompatActivity() {
             5 -> {
                 vocalsVolume = msg.data.toFloat()
                 runOnUiThread { vocalsPlayer.volume = vocalsVolume }
-                getSharedPreferences("KTV_PREFS", Context.MODE_PRIVATE).edit().putFloat("vocalsVolume", vocalsVolume).apply()
+                getSharedPreferences("KTV_PREFS", Context.MODE_PRIVATE).edit {
+                    putFloat("vocalsVolume", vocalsVolume)
+                }
             }
             6 -> {
                 accVolume = msg.data.toFloat()
                 runOnUiThread { accPlayer.volume = accVolume }
-                getSharedPreferences("KTV_PREFS", Context.MODE_PRIVATE).edit().putFloat("accompanimentVolume", accVolume).apply()
+                getSharedPreferences("KTV_PREFS", Context.MODE_PRIVATE).edit {
+                    putFloat("accompanimentVolume", accVolume)
+                }
             }
             7 -> runOnUiThread { playUserInterruption(msg.data) }
             8 -> {
